@@ -2,3 +2,4 @@ data/
 model_zoo/
 checkpoints/
 **/__pycache__/
+data_ta_anno/

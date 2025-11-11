@@ -1,0 +1,46 @@
+# tqdm
+# yacs
+# torchtext==0.15.2
+# timm
+# tensorboard
+# pytorch-pretrained-bert
+# transformers==4.20.0
+# Pillow
+# opencv-python==4.10.0.82
+# ffmpeg_python
+# scipy
+# cython
+# tqdm
+# packaging==21.3
+# ftfy
+# easydict
+# einops
+# numpy<2
+
+# Core utilities
+tqdm
+packaging
+yacs
+easydict
+
+# Deep learning
+torchtext
+timm
+tensorboard
+pytorch-pretrained-bert
+transformers==4.33.3
+einops
+
+# Image and video processing
+Pillow
+opencv_python
+opencv-python<4.12
+ffmpeg_python
+
+# Scientific computing
+scipy
+cython
+numpy<2
+
+# Text processing
+ftfy
