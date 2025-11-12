@@ -71,6 +71,8 @@ def main():
     
     model, _, _ = build_model(cfg)
     device = torch.device(cfg.MODEL.DEVICE)
+    print("[DEBUG] device: ", device)
+    print("[DEBUG] which cuda is used: ", torch.cuda.current_device())
     model.to(device)
     
     checkpointer = VSTGCheckpointer(cfg, model, logger=logger, is_train=False)

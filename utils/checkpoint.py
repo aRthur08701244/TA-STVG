@@ -167,7 +167,7 @@ class VSTGCheckpointer(object):
 
         self.model.load_state_dict(loaded_dict, strict=False)
 
-    def _load_pretrained(self,state_dict):
+    def _load_pretrained(self, state_dict):
         model_key = 'model'
         if "model_ema" in state_dict:
             model_key = 'model_ema'
@@ -183,7 +183,12 @@ class VSTGCheckpointer(object):
                 state_dict.pop('optimizer')
         else:
             # Used For Evaluation and Inference, Load trained Checkpoint
-            self.model.load_state_dict(state_dict[model_key])
+            # self.model.load_state_dict(state_dict[model_key])
+            missing, unexpected = self.model.load_state_dict(state_dict[model_key], strict=False)
+            if unexpected:
+                print(f"[Warning] Unexpected keys in checkpoint: {unexpected}")
+            if missing:
+                print(f"[Warning] Missing keys in checkpoint: {missing}")
         if (self.cfg.MODEL.EMA) and (self.model_ema is not None):
             self.model_ema.load_state_dict(deepcopy(self.model).state_dict()) 
    
