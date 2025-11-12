@@ -1,0 +1,79 @@
+mamba create --name ta-stvg python=3.9
+mamba activate ta-stvg
+pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2
+pip install -r requirements.txt
+
+# mamba install tqdm yacs "torchtext==0.15.2" timm tensorboard pytorch-pretrained-bert "transformers==4.5.1" Pillow ffmpeg-python scipy cython tqdm "packaging==21.3" ftfy
+# pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cu118
+# mamba install easydict einops
+# pip install "numpy<2"
+# pip install opencv-python==4.10.0.82
+# torchdata==0.9.0
+
+python3 -c "
+from transformers import RobertaModel, RobertaTokenizer
+model = RobertaModel.from_pretrained('roberta-base')
+tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
+model.save_pretrained('model_zoo/roberta-base/')
+tokenizer.save_pretrained('model_zoo/roberta-base/')
+"
+
+cp -r model_zoo/roberta-base model_zoo/roberta
+
+wget https://huggingface.co/Gstar666/TASTVG/resolve/main/data.tar?download=true
+mv data.tar?download=true data.tar
+tar -xvf data.tar
+mv data data_ta_anno
+
+ln -s /home/oscarfu/MMPromptSTVG/CGSTVG/data data
+ln -s /home/oscarfu/MMPromptSTVG/CGSTVG/model_zoo model_zoo
+
+cp data_ta_anno/hc-stvg2/annos/train.json data/hc-stvg2/annos/train.json
+cp data_ta_anno/hc-stvg2/annos/test.json data/hc-stvg2/annos/test.json
+
+cp data_ta_anno/hc-stvg/annos/train.json data/hc-stvg/annos/train.json
+cp data_ta_anno/hc-stvg/annos/test.json data/hc-stvg/annos/test.json
+
+export PYTHONPATH="$(pwd):$PYTHONPATH"
+export PYTHONPATH=/home/arthur/stvg_petl/TA-STVG:$PYTHONPATH
+export SP_DIR=/home/arthur/miniforge3/envs/ta-stvg/lib/python3.9/site-packages/
+
+CUDA_VISIBLE_DEVICES='0,3' python3 -m torch.distributed.launch \
+ --nproc_per_node=2 \
+ scripts/test_net.py \
+ --config-file "experiments/hcstvg2.yaml" \
+ MODEL.WEIGHT checkpoints/TASTVG_HCSTVG2.pth \
+ OUTPUT_DIR output/hcstvg2
+
+CUDA_VISIBLE_DEVICES='1,3' python3 -m torch.distributed.launch \
+ --nproc_per_node=2 \
+ scripts/test_net.py \
+ --config-file "experiments/hcstvg2.yaml" \
+ MODEL.WEIGHT checkpoints/TASTVG_HCSTVG2.pth \
+ OUTPUT_DIR output/hcstvg2
+
+CUDA_VISIBLE_DEVICES='1' python3 -m torch.distributed.launch \
+ --nproc_per_node=1 \
+ scripts/test_net.py \
+ --config-file "experiments/hcstvg2.yaml" \
+ MODEL.WEIGHT checkpoints/TASTVG_HCSTVG2.pth \
+ OUTPUT_DIR output/hcstvg2
+
+ CUDA_VISIBLE_DEVICES='3' python3 -m torch.distributed.launch \
+ --nproc_per_node=1 \
+ scripts/test_net.py \
+ --config-file "experiments/hcstvg2.yaml" \
+ MODEL.WEIGHT checkpoints/TASTVG_HCSTVG2.pth \
+ OUTPUT_DIR output/hcstvg2
+
+ ================================================ 11/11  ================================================
+
+mamba create --name stvg python=3.9
+mamba activate stvg
+pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2
+pip install -r requirements_new.txt
+
+mamba create --name stvg python=3.10
+mamba activate stvg
+pip install torch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 --index-url https://download.pytorch.org/whl/cu121
+pip install -r requirements_new.txt
