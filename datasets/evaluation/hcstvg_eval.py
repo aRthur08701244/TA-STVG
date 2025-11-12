@@ -25,7 +25,7 @@ class HCSTVGiouEvaluator:
         :param subset: train, val or test
         :param iou_thresholds: IoU thresholds for the vIoU metrics
         """
-        assert subset in ["train", "test"], f"Wrong HCSTVG subset {subset}"
+        assert subset in ["train", "test", "val"], f"Wrong HCSTVG subset {subset}"
     
         gt_data = []
         cache_dir = os.path.join(vidstg_path, 'data_cache')

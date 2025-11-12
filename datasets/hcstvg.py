@@ -23,13 +23,14 @@ class HCSTVGDataset(data.Dataset):
 
     def __init__(self, cfg, split, transforms=None) -> None:
         super(HCSTVGDataset,self).__init__()
-        assert split in ['train', 'test']
+        assert split in ['train', 'val', 'test']
         self.cfg = cfg.clone()
         self.split = split
         self.transforms = transforms
 
         self.data_dir = cfg.DATA_DIR
         self.anno_dir = os.path.join(self.data_dir,'annos/')
+        assert split == 'train' if split == 'train' else 'val' if split == 'test' and 'hc-stvg2' in self.data_dir else 'test', f"split wrong. split: {split}, data_dir: {self.data_dir}"
         self.sent_file = os.path.join(self.anno_dir, f'{split}.json')  # split
         self.epsilon = 1e-10
         
@@ -85,16 +86,20 @@ class HCSTVGDataset(data.Dataset):
                         break
                 except Exception:
                     # print(video_name)
-                    aa = 0
+                    pass
 
             if not succ_flag:
                 print("video load wrong", video_path)
                 frames = np.ones((1000, resolution, int(resolution * max_rate), 3), dtype=np.uint8)
                 # raise RuntimeError("Load Video Error")
             try:
+                if frame_ids[-1] >= frames.shape[0]:
+                    print("[DEBUG] frame_ids[-1] >= frames.shape[0]: ", frame_ids[-1], frames.shape[0], video_path)
+                    frame_ids = frame_ids[frame_ids < frames.shape[0]]
                 frames = frames[frame_ids]
             except:
-                print("frame_ids wrong", video_path)
+                actual_frame_counts = frames.shape[0]
+                print("frame_ids wrong", video_path, frame_ids, actual_frame_counts)
                 frames = np.ones((1000, resolution, int(resolution * max_rate), 3), dtype=np.uint8)
                 frames = frames[frame_ids]
 
@@ -169,34 +174,43 @@ class HCSTVGDataset(data.Dataset):
         # Used For Evaluateion
         gt_anno_cache = os.path.join(cache_dir, f'hcstvg-{self.split}-anno.cache')
         
-        if os.path.exists(dataset_cache):
-            data = torch.load(dataset_cache)
-            return data
+        # if os.path.exists(dataset_cache):
+        #     data = torch.load(dataset_cache)
+        #     return data
         
+        print("[DEBUG] Loading data from: ", self.sent_file)
         gt_data, gt_anno = [], []
         vstg_anno = self.preprocess(self.sent_file)
         
-        for anno_id in tqdm(vstg_anno):  
+        for anno_id in tqdm(vstg_anno, desc="Loading data from annotation file"): 
             gt_file = vstg_anno[anno_id]
             frame_nums = gt_file['frame_count']
             video_name = gt_file['vid']
         
             start_fid = 0
             end_fid = frame_nums - 1
-            temp_gt_begin = max(0, gt_file['tube_start_frame'])
+            temp_gt_begin = max(start_fid, gt_file['tube_start_frame'])
             temp_gt_end = min(gt_file['tube_end_frame'], end_fid)
 
-            assert len(gt_file['target_bboxs']) == temp_gt_end - temp_gt_begin + 1
-            
-            frame_ids = []
-            for frame_id in range(start_fid, end_fid):
-                frame_ids.append(frame_id)
-                    
+            bbox_list = gt_file.get('target_bboxs', [])
+            if not isinstance(bbox_list, list):
+                bbox_list = []
+                print(f"Warning: {video_name} bbox is not a list, skipping")
+
+            assert len(bbox_list) == temp_gt_end - temp_gt_begin + 1
+
+            # Use the annotated tube range instead of entire video
+            frame_ids = list(range(temp_gt_begin, temp_gt_end + 1))
+            # print("frame_ids: ", frame_ids)
+            # generate actioness     
             actioness = np.array([int(fid <= temp_gt_end and fid >= temp_gt_begin) for fid in frame_ids]) 
             
             # prepare the temporal heatmap
             action_idx = np.where(actioness)[0]
-            start_idx, end_idx = action_idx[0], action_idx[-1]
+            if len(action_idx) == 0:
+                start_idx = end_idx = 0
+            else:
+                start_idx, end_idx = action_idx[0], action_idx[-1]
             
             start_heatmap = np.ones(actioness.shape) * self.epsilon
             pesudo_prob = (1 - (start_heatmap.shape[0] - 3) * self.epsilon - 0.5) / 2
@@ -214,16 +228,40 @@ class HCSTVGDataset(data.Dataset):
             if end_idx < actioness.shape[0] - 1:
                 end_heatmap[end_idx+1] = pesudo_prob
 
+            # bbox array
             bbox_array = []
-            for idx in range(len(gt_file['target_bboxs'])):
-                bbox = gt_file['target_bboxs'][idx]
+            width = gt_file['width']
+            height = gt_file['height']
+            
+            for bbox in bbox_list:
+                if len(bbox) != 4:
+                    print(f"Warning: there is a bbox with length {len(bbox)} (4 is valid) in {video_name}, skipping")
+                    continue
                 x1, y1, w, h = bbox
-                bbox_array.append(np.array([x1,y1,min(x1+w, gt_file['width']), min(y1+h, gt_file['height'])]))
-                assert x1 <= gt_file['width'] and x1 + w <= gt_file['width']
-                assert y1 <= gt_file['height'] and y1 + h <= gt_file['height']
+
+                # is it needed?
+                # clamp to valid range
+                x1 = max(0, min(x1, width-1))
+                y1 = max(0, min(y1, height-1))
+                x2 = max(0, min(x1 + max(1, w), width))
+                y2 = max(0, min(y1 + max(1, h), height))
+
+                # bbox_array.append(np.array([x1,y1,min(x1+w, gt_file['width']), min(y1+h, gt_file['height'])]))
+                bbox_array.append(np.array([x1, y1, x2, y2]))
+
+                # skip boxes with zero or negative width/height
+                if x2 <= x1 or y2 <= y1:
+                    print(f"Warning: {video_name} bbox with non-positive width/height: {bbox}, skipping")
+                    continue
+                if x1 < 0 or y1 < 0 or x2 > width or y2 > height:
+                    print(f"Warning: {video_name} bbox out of range: {bbox}")
+                # assert x1 <= gt_file['width'] and x1 + w <= gt_file['width']
+                # assert y1 <= gt_file['height'] and y1 + h <= gt_file['height']
             
             bbox_array = np.array(bbox_array)
-            assert bbox_array.shape[0] == temp_gt_end - temp_gt_begin + 1
+            expected_len = temp_gt_end - temp_gt_begin + 1
+
+            assert bbox_array.shape[0] == expected_len, f"{video_name} bbox array length mismatch after padding attempt: {bbox_array.shape[0]} != {expected_len}"
             
             gt_bbox_dict = {fid : bbox_array[fid - temp_gt_begin].tolist() \
                     for fid in range(temp_gt_begin, temp_gt_end + 1)}
@@ -274,18 +312,36 @@ class HCSTVGDataset(data.Dataset):
         proc_hcstvg_anno = {}
         for vid in tqdm(hcstvg_anno):
             anno = hcstvg_anno[vid]
+            # sanity check
+            if not isinstance(anno, dict):
+                print(f"Skipping {vid}: invalid annotation type {type(anno)}")
+                continue
             data_pairs = {}
             data_pairs['vid'] = vid
-            data_pairs['width'] = anno['width']
-            data_pairs['height'] = anno['height']
+            # Extract width and height from img_size if available
+            if 'img_size' in anno:
+                h, w, _ = anno['img_size']
+                data_pairs['width'] = w
+                data_pairs['height'] = h
+            elif 'width' in anno and 'height' in anno:
+                data_pairs['width'] = anno['width']
+                data_pairs['height'] = anno['height']
+            else:
+                data_pairs['width'] = None
+                data_pairs['height'] = None
             data_pairs['frame_count'] = anno['img_num']
             data_pairs['tube_start_frame'] = anno['st_frame'] - 1
-            data_pairs['tube_end_frame'] = data_pairs['tube_start_frame'] + len(anno['bbox']) - 1
+            # bbox list
+            bbox_list = anno.get('bbox', [])
+            if not isinstance(bbox_list, list):
+                print(f"Warning: {vid} bbox is not a list, skipping")
+                bbox_list = []
+            data_pairs['tube_end_frame'] = data_pairs['tube_start_frame'] + len(bbox_list) - 1
             data_pairs['tube_start_time'] = anno['st_time']
             data_pairs['tube_end_time'] = anno['ed_time']
             data_pairs['id'] = pair_cnt
-            data_pairs['sentence'] = anno['caption']
-            data_pairs['target_bboxs'] = anno['bbox']
+            data_pairs['sentence'] = anno['English']
+            data_pairs['target_bboxs'] = bbox_list
             proc_hcstvg_anno[pair_cnt] = data_pairs
             pair_cnt += 1
         
