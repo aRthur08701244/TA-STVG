@@ -19,6 +19,11 @@ from torch.utils.tensorboard import SummaryWriter
 import torch.distributed as dist
 import itertools
 
+import torch.multiprocessing as mp
+from torch.utils.data.distributed import DistributedSampler
+from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.distributed import init_process_group, destroy_process_group
+
 
 def train(cfg, local_rank, distributed, logger):
     model, criteria, weight_dict = build_model(cfg)
@@ -31,7 +36,8 @@ def train(cfg, local_rank, distributed, logger):
     model_without_ddp = model
     
     if distributed:
-        model = torch.nn.parallel.DistributedDataParallel(
+        # model = torch.nn.parallel.DistributedDataParallel(
+        model = DDP(
             model, device_ids=[local_rank], output_device=local_rank,
             find_unused_parameters=True
         )
@@ -248,7 +254,7 @@ def run_test(cfg, model, model_ema, logger, distributed):
     synchronize()
 
 
-def main():
+def main(rank, world_size):
     parser = argparse.ArgumentParser(description="Spatio-Temporal Grounding Training")
     parser.add_argument(
         "--config-file",
@@ -279,13 +285,14 @@ def main():
     )
 
     args = parser.parse_args()
+    ddp_setup(rank, world_size)
     num_gpus = int(os.environ["WORLD_SIZE"]) if "WORLD_SIZE" in os.environ else 1
     args.distributed = num_gpus > 1
 
     if args.distributed:
         torch.cuda.set_device(args.local_rank)
         torch.distributed.init_process_group(
-            backend="nccl", init_method="env://"
+            backend="nccl"
         )
         synchronize()
 
@@ -325,6 +332,8 @@ def main():
     
     if not args.skip_test:
         run_test(cfg, model, model_ema, logger, args.distributed)
+        
+    destroy_process_group()
 
 
 if __name__ == "__main__":

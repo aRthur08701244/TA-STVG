@@ -6,7 +6,7 @@ NUM_WORKER=${1:-1}
 NODE_ID=${2:-0}
 NUM_TRAINERS=${3:-2}
 CONFIG_FILE=${4:-"experiments/hcstvg2.yaml"}
-CUDA_VISIBLE_DEVICES=${5:-"3,5"}
+CUDA_VISIBLE_DEVICES=${5:-"0,3"}
 # ===============================
 
 # Make sure operate in the correct directory
