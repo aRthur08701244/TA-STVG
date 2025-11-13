@@ -182,7 +182,8 @@ class VideoSTGLoss(nn.Module):
         if loss == "actioness":
             return loss_map[loss](outputs, targets, gt_temp_bound, time_mask, **kwargs)
         if loss.startswith("logits"):
-            return loss_map[loss](outputs, targets, num_boxes)
+            # return loss_map[loss](outputs, targets, num_boxes)
+            return {loss: 0}
 
         return loss_map[loss](outputs, targets, num_boxes, **kwargs)
 

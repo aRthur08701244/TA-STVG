@@ -51,10 +51,10 @@ class TASTVGNet(nn.Module):
         hidden_dim = cfg.MODEL.TASTVG.HIDDEN
 
         self.text_encoder = build_text_encoder(cfg)
-        self.s_temporal_clas = build_TemporalSampling(hidden_dim)
-        self.t_temporal_clas = build_TemporalSampling(hidden_dim)
-        self.s_spatial_clas = build_SpatialActivation(hidden_dim, cfg.DATASET.APP_NUM)
-        self.t_spatial_clas = build_SpatialActivation(hidden_dim, cfg.DATASET.MOT_NUM)
+        # self.s_temporal_clas = build_TemporalSampling(hidden_dim)
+        # self.t_temporal_clas = build_TemporalSampling(hidden_dim)
+        # self.s_spatial_clas = build_SpatialActivation(hidden_dim, cfg.DATASET.APP_NUM)
+        # self.t_spatial_clas = build_SpatialActivation(hidden_dim, cfg.DATASET.MOT_NUM)
         self.ground_encoder = build_encoder(cfg)
         self.ground_decoder = build_decoder(cfg)
         
@@ -77,6 +77,9 @@ class TASTVGNet(nn.Module):
         self.verb_label = load_json(cfg.DATA_DIR + "/annos/train.json")
         self.verb_label2 = load_json(cfg.DATA_DIR + "/annos/test.json")
         self.theta = 0.45 if cfg.DATASET.NAME == 'VidSTG' else 0.7
+
+        self.init_tempral_query = nn.Parameter(torch.randn(hidden_dim))
+        self.init_spatial_query = nn.Parameter(torch.randn(hidden_dim))
 
     def forward(self, videos, texts, targets, iteration_rate=-1):
         """
@@ -110,6 +113,7 @@ class TASTVGNet(nn.Module):
         f_vis_features = encoded_info['encoded_feature'][:l].permute(1, 2, 0).reshape(vid_features.size()).detach()
         f_text_cls = encoded_info['encoded_feature'][l:-l].mean(1).unsqueeze(0).detach()
         
+        """
         # Text-guided Temporal Sampling
         logits_f_m = self.t_temporal_clas(f_vid_features, f_text_cls)
         logits_f_a = self.s_temporal_clas(f_vis_features, f_text_cls)
@@ -117,23 +121,27 @@ class TASTVGNet(nn.Module):
         att_sequences = (logits_f_m.sigmoid()  + logits_f_a.sigmoid()) / 2
         choose_index = torch.nonzero(att_sequences > self.theta).squeeze().tolist()
         choose_index = [choose_index] if isinstance(choose_index, int) else choose_index
-        choose_index = choose_index or torch.nonzero(att_sequences > 0).squeeze().tolist()   
+        choose_index = choose_index or torch.nonzero(att_sequences > 0).squeeze().tolist()
 
         # Attribute-aware Spatial Activation
         logits_r_m, att_map_t = self.t_spatial_clas(f_vid_features[choose_index], f_text_cls[:,:1])
         logits_r_a, att_map_s = self.s_spatial_clas(f_vis_features[choose_index], f_text_cls[:,:1])
+        """
 
         # Generating Object Queries
-        init_tempral_query = (encoded_info['encoded_feature'][-l:].permute(1, 0, 2)[choose_index] * att_map_t.unsqueeze(2)).mean((0, 1))
-        init_spatial_query = (encoded_info['encoded_feature'][:l].permute(1, 0, 2)[choose_index] * att_map_s.unsqueeze(2)).mean((0, 1))
+        # init_tempral_query = (encoded_info['encoded_feature'][-l:].permute(1, 0, 2)[choose_index] * att_map_t.unsqueeze(2)).mean((0, 1))
+        # init_spatial_query = (encoded_info['encoded_feature'][:l].permute(1, 0, 2)[choose_index] * att_map_s.unsqueeze(2)).mean((0, 1))
+        init_tempral_query = self.init_tempral_query
+        init_spatial_query = self.init_spatial_query
 
         # Query-based Decoding
         outputs_pos, outputs_time = self.ground_decoder(encoded_info=encoded_info, vis_pos=vis_pos_embed, isq=init_spatial_query, itq=init_tempral_query)
 
+        """
         if iteration_rate < 0:
             choose_index = torch.nonzero((self.action_embed(outputs_time)[-1].squeeze().sigmoid()>0.5).int()).squeeze().tolist()
             choose_index = [choose_index] if isinstance(choose_index, int) else choose_index
-            choose_index = choose_index or torch.nonzero(att_sequences > 0).squeeze().tolist()  
+            choose_index = choose_index or torch.nonzero(att_sequences > 0).squeeze().tolist()
 
             logits_r_a, att_map_s = self.s_spatial_clas(f_vis_features[choose_index], f_text_cls[:,:1])
             logits_r_m, att_map_t = self.t_spatial_clas(f_vid_features[choose_index], f_text_cls[:,:1])
@@ -141,6 +149,7 @@ class TASTVGNet(nn.Module):
             init_tempral_query = (encoded_info['encoded_feature'][-l:].permute(1, 0, 2)[choose_index] * att_map_t.unsqueeze(2)).mean((0, 1))
             init_spatial_query = (encoded_info['encoded_feature'][:l].permute(1, 0, 2)[choose_index] * att_map_s.unsqueeze(2)).mean((0, 1))
             outputs_pos, outputs_time = self.ground_decoder(encoded_info=encoded_info, vis_pos=vis_pos_embed, isq=init_spatial_query, itq=init_tempral_query)
+        """
 
         out = {}
         
@@ -148,11 +157,11 @@ class TASTVGNet(nn.Module):
         outputs_coord = outputs_pos.flatten(1, 2) 
         out.update({"pred_boxes": outputs_coord[-1]})
         # Predict the temporal relevance scores
-        out.update({"logits_f_m": logits_f_m})
-        out.update({"logits_f_a": logits_f_a})
+        # out.update({"logits_f_m": logits_f_m})
+        # out.update({"logits_f_a": logits_f_a})
         # Predict the attribution classification scores
-        out.update({"logits_r_a": logits_r_a})
-        out.update({"logits_r_m": logits_r_m})
+        # out.update({"logits_r_a": logits_r_a})
+        # out.update({"logits_r_m": logits_r_m})
         # Predict the start and end probability 
         time_hiden_state = outputs_time  
         outputs_time = self.temp_embed(time_hiden_state)  
@@ -172,8 +181,10 @@ class TASTVGNet(nn.Module):
 
         out['verb_labels'] = self.verb_label[info_key]['verb_index_list'] if self.training else self.verb_label2[info_key]['verb_index_list']
         out['attr_labels'] = self.verb_label[info_key]['adj_index_list'] if self.training else self.verb_label2[info_key]['adj_index_list']
-        out['att_sequences'] = att_sequences.unsqueeze(0)
+        # out['att_sequences'] = att_sequences.unsqueeze(0)
+        out['att_sequences'] = torch.zeros(1, videos.tensors.size(0)).to(videos.tensors.device)
         gt_index = torch.nonzero(targets[0]['actioness']).squeeze().tolist()
-        out["pr"] = precision_recall(choose_index, gt_index)
+        # out["pr"] = precision_recall(choose_index, gt_index)
+        out["pr"] = 0, 0
         
         return out
