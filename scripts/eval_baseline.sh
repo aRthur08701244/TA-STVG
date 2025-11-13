@@ -2,11 +2,11 @@
 set -euo pipefail
 
 # ======== User Inputs ==========
-N_GPUS=${1:-2}
+N_GPUS=${1:-1}
 CONFIG_FILE=${2:-"experiments/hcstvg2.yaml"}
 MODEL_WEIGHT=${3:-"checkpoints/TASTVG_HCSTVG2.pth"}
 OUTPUT_DIR=${4:-"output/hcstvg2"}
-CUDA_VISIBLE_DEVICES=${5:-"1,3"}
+CUDA_VISIBLE_DEVICES=${5:-"0"}
 # ===============================
 
 # Make sure operate in the correct directory

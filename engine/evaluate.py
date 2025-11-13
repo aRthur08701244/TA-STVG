@@ -110,7 +110,12 @@ def do_eval(cfg, mode, logger, model, postprocessor, data_loader, evaluator, dev
     model.eval()
     logger.info("Start evaluation on the {} split of {} dataset".format(mode, cfg.DATASET.NAME))
 
-    for _, batch_dict in enumerate(tqdm(data_loader)):
+    print("Total {} videos to eval.".format(len(data_loader.dataset)))
+    for i_batch, batch_dict in enumerate(tqdm(data_loader)):
+        # if i_batch <= 960:
+        #     continue
+        # elif i_batch > 1800:
+        #     break
         videos = batch_dict['videos'].to(device)
         texts = batch_dict['texts']
         targets = to_device(batch_dict["targets"], device) 
