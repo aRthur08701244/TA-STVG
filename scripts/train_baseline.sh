@@ -30,17 +30,16 @@ echo "==========================================="
 # distributed training launch
 # https://docs.pytorch.org/docs/stable/elastic/run.html
 # torchrun = python3 -m torch.distributed.run
-CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES \
-  torchrun \
-  --standalone \
-  --nnodes=$NUM_WORKER \
-  --nproc-per-node=$NUM_TRAINERS \
-  scripts/train_net.py \
-  --config-file $CONFIG_FILE \
+
+# CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES \
+#   torchrun \
+#   --standalone \
+#   --nnodes=$NUM_WORKER \
+#   --nproc-per-node=$NUM_TRAINERS \
+#   scripts/train_net.py \
+#   --config-file $CONFIG_FILE \
 
 # Single GPU training (for debugging)
-# CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES \
-# python3 scripts/train_net.py \
-#   --config-file $CONFIG_FILE \
-#   OUTPUT_DIR $OUTPUT_DIR \
-#   TENSORBOARD_DIR $OUTPUT_DIR
+CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES \
+python3 scripts/train_net.py \
+  --config-file $CONFIG_FILE \
