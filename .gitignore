@@ -3,3 +3,5 @@ model_zoo/
 checkpoints/
 **/__pycache__/
 data_ta_anno/
+last_checkpoint
+*.pth
