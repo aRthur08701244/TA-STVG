@@ -1,5 +1,5 @@
 from .modal_encoder import CrossModalEncoder
-from .query_decoder import QueryDecoder
+from .query_decoder_minimal import QueryDecoder
 from .classifier import TemporalSampling, SpatialActivation
 
     

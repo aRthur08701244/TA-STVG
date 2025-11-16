@@ -247,3 +247,130 @@ TENSORBOARD_DIR: output/hcstvg2/tensorboard
 2025-11-13 18:36:36,158 Video Grounding INFO: Saving checkpoint to output/hcstvg2/model_000500.pth
 2025-11-13 18:37:06,514 Video Grounding INFO: Start validating
 2025-11-13 18:37:07,403 Video Grounding INFO: Start evaluation on the val split of HC-STVG dataset
+2025-11-15 23:47:08,471 Video Grounding INFO: Using 1 GPUs
+2025-11-15 23:47:08,471 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-15 23:47:08,471 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-15 23:47:08,480 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-15 23:47:08,480 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-15 23:47:25,071 Video Grounding INFO: Loading checkpoint from output/hcstvg2/model_000500.pth
+2025-11-15 23:48:19,927 Video Grounding INFO: Loading optimizer from output/hcstvg2/model_000500.pth
+2025-11-15 23:48:56,570 Video Grounding INFO: Start training
+2025-11-15 23:49:50,933 Video Grounding INFO: eta: 10 days, 20:21:22  iter: 550 / 862650  loss: 7.2488 (8.7284)  loss_bbox: 2.2397 (2.3799)  loss_giou: 2.9167 (3.0855)  loss_sted: 1.6318 (2.8707)  logits_f_m: 0.0000 (0.0000)  logits_f_a: 0.0000 (0.0000)  logits_r_a: 0.0000 (0.0000)  logits_r_m: 0.0000 (0.0000)  loss_actioness: 0.3468 (0.3923)  time: 0.8597 (1.0872)  data: 0.0179 (0.0804)  lr: 0.000300  lr_vis_encoder: 0.000005  lr_text_encoder: 0.000003  lr_temp_decoder: 0.000013  lr_class: 0.000500  max mem: 31404
+2025-11-15 23:50:36,405 Video Grounding INFO: eta: 9 days, 23:03:22  iter: 600 / 862650  loss: 8.6835 (8.6389)  loss_bbox: 2.6761 (2.4240)  loss_giou: 3.2279 (3.0160)  loss_sted: 2.4610 (2.7942)  logits_f_m: 0.0000 (0.0000)  logits_f_a: 0.0000 (0.0000)  logits_r_a: 0.0000 (0.0000)  logits_r_m: 0.0000 (0.0000)  loss_actioness: 0.3788 (0.4047)  time: 0.8120 (0.9983)  data: 0.0187 (0.0504)  lr: 0.000300  lr_vis_encoder: 0.000005  lr_text_encoder: 0.000003  lr_temp_decoder: 0.000014  lr_class: 0.000500  max mem: 38276
+2025-11-15 23:51:24,777 Video Grounding INFO: eta: 9 days, 20:34:41  iter: 650 / 862650  loss: 6.9214 (8.4068)  loss_bbox: 1.8452 (2.3438)  loss_giou: 2.7038 (2.9860)  loss_sted: 2.3266 (2.6657)  logits_f_m: 0.0000 (0.0000)  logits_f_a: 0.0000 (0.0000)  logits_r_a: 0.0000 (0.0000)  logits_r_m: 0.0000 (0.0000)  loss_actioness: 0.4045 (0.4114)  time: 0.9249 (0.9880)  data: 0.0191 (0.0407)  lr: 0.000300  lr_vis_encoder: 0.000005  lr_text_encoder: 0.000004  lr_temp_decoder: 0.000015  lr_class: 0.000500  max mem: 38276
+2025-11-15 23:52:10,205 Video Grounding INFO: eta: 9 days, 15:48:26  iter: 700 / 862650  loss: 8.5245 (8.4184)  loss_bbox: 2.4882 (2.4275)  loss_giou: 3.5625 (3.0722)  loss_sted: 1.4968 (2.5018)  logits_f_m: 0.0000 (0.0000)  logits_f_a: 0.0000 (0.0000)  logits_r_a: 0.0000 (0.0000)  logits_r_m: 0.0000 (0.0000)  loss_actioness: 0.4459 (0.4169)  time: 0.7147 (0.9682)  data: 0.0148 (0.0356)  lr: 0.000300  lr_vis_encoder: 0.000005  lr_text_encoder: 0.000004  lr_temp_decoder: 0.000016  lr_class: 0.000500  max mem: 38276
+2025-11-15 23:52:56,610 Video Grounding INFO: eta: 9 days, 13:52:33  iter: 750 / 862650  loss: 8.0889 (8.2440)  loss_bbox: 2.4363 (2.4552)  loss_giou: 2.9002 (3.0811)  loss_sted: 1.5012 (2.2914)  logits_f_m: 0.0000 (0.0000)  logits_f_a: 0.0000 (0.0000)  logits_r_a: 0.0000 (0.0000)  logits_r_m: 0.0000 (0.0000)  loss_actioness: 0.3648 (0.4164)  time: 0.8803 (0.9602)  data: 0.0192 (0.0324)  lr: 0.000300  lr_vis_encoder: 0.000005  lr_text_encoder: 0.000004  lr_temp_decoder: 0.000017  lr_class: 0.000500  max mem: 38276
+2025-11-15 23:53:40,992 Video Grounding INFO: eta: 9 days, 10:58:09  iter: 800 / 862650  loss: 6.6799 (8.0633)  loss_bbox: 2.2129 (2.4507)  loss_giou: 2.9852 (3.0650)  loss_sted: 0.8664 (2.1318)  logits_f_m: 0.0000 (0.0000)  logits_f_a: 0.0000 (0.0000)  logits_r_a: 0.0000 (0.0000)  logits_r_m: 0.0000 (0.0000)  loss_actioness: 0.3697 (0.4158)  time: 0.8495 (0.9481)  data: 0.0175 (0.0301)  lr: 0.000300  lr_vis_encoder: 0.000005  lr_text_encoder: 0.000005  lr_temp_decoder: 0.000019  lr_class: 0.000500  max mem: 38276
+2025-11-15 23:54:28,167 Video Grounding INFO: eta: 9 days, 10:47:56  iter: 850 / 862650  loss: 6.5520 (7.9502)  loss_bbox: 2.1211 (2.4747)  loss_giou: 3.0391 (3.0693)  loss_sted: 0.7604 (1.9898)  logits_f_m: 0.0000 (0.0000)  logits_f_a: 0.0000 (0.0000)  logits_r_a: 0.0000 (0.0000)  logits_r_m: 0.0000 (0.0000)  loss_actioness: 0.4159 (0.4164)  time: 0.9635 (0.9474)  data: 0.0216 (0.0286)  lr: 0.000300  lr_vis_encoder: 0.000005  lr_text_encoder: 0.000005  lr_temp_decoder: 0.000020  lr_class: 0.000500  max mem: 39968
