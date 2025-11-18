@@ -53,7 +53,7 @@ class VideoSTGLoss(nn.Module):
         assert "logits_r_a" in outputs
         losses = {}
         pred_logits = outputs['logits_r_a']
-        if pred_logits = 0:
+        if pred_logits == 0:
             losses["logits_r_a"] = torch.tensor(0, device=outputs['logits_r_a'].device)
             return losses
         gt_logits = torch.zeros(pred_logits.size(-1)).to(pred_logits.device)
@@ -66,7 +66,7 @@ class VideoSTGLoss(nn.Module):
         assert "logits_r_m" in outputs
         losses = {}
         pred_logits = outputs['logits_r_m']
-        if pred_logits = 0:
+        if pred_logits == 0:
             losses["logits_r_m"] = torch.tensor(0, device=outputs['logits_r_m'].device)
             return losses
         gt_logits = torch.zeros(pred_logits.size(-1)).to(pred_logits.device)
