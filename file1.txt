@@ -1,0 +1,77 @@
+class PosDecoder(nn.Module):
+    def __init__(self, cfg, num_layers, return_intermediate=False, return_weights=False, d_model=256, query_dim=4):
+        super().__init__()
+        self.layers = nn.ModuleList([PosDecoderLayer(cfg) for _ in range(num_layers)])
+        self.num_layers = num_layers
+        self.norm = nn.LayerNorm(d_model)
+        self.return_intermediate = return_intermediate
+        self.return_weights = False
+        self.query_dim = query_dim
+        self.d_model = d_model
+
+        self.query_scale = MLP(d_model, d_model, d_model, 2)
+        self.ref_point_head = MLP(query_dim // 2 * d_model, d_model, d_model, 2)
+        self.bbox_embed = None
+
+        self.gf_mlp = MLP(d_model, d_model, d_model, 2)
+        self.gf_mlp2 = MLP(d_model, d_model, d_model, 2)
+        self.fuse_linear = nn.Linear(d_model*2, d_model)
+        for layer_id in range(num_layers - 1):
+            self.layers[layer_id + 1].ca_qpos_proj = None
+        self.norm2 = nn.LayerNorm(d_model)
+
+    def forward(
+            self,
+            query_tgt: Optional[Tensor] = None,  
+            pred_boxes: Optional[Tensor] = None,  
+            query_time=None,  
+            query_mask: Optional[Tensor] = None,  
+            encoded_feature: Optional[Tensor] = None, 
+            encoded_pos: Optional[Tensor] = None,  
+            encoded_mask: Optional[Tensor] = None,
+    ):
+        intermediate = []
+        intermediate_weights = []
+        ref_anchors = []  # the query pos is like t x b x 4
+        good_rf = None
+        aug_encoded_feature = None
+
+        for layer_id, layer in enumerate(self.layers):
+            # get sine embedding for the query vector
+            query_sine_embed = gen_sineembed_for_position(pred_boxes)
+            query_pos = self.ref_point_head(query_sine_embed)  # generated the position embedding
+
+            # For the first decoder layer, we do not apply transformation over p_s
+            if layer_id == 0:
+                pos_transformation = 1
+            else:
+                pos_transformation = self.query_scale(query_tgt)
+
+            # apply transformation
+            query_sine_embed = query_sine_embed[..., :self.d_model] * pos_transformation
+
+            query_tgt, temp_weights = layer(
+                query_tgt=query_tgt, query_pos=query_pos,
+                query_time_embed=query_time, query_sine_embed=query_sine_embed, query_mask=query_mask,
+                encoded_feature=aug_encoded_feature if aug_encoded_feature is not None else encoded_feature, encoded_pos=encoded_pos, encoded_mask=encoded_mask,
+                good_rf=good_rf, is_first=(layer_id == 0))
+
+            # iter update
+            if self.bbox_embed is not None:
+                tmp = self.bbox_embed(query_tgt)  
+                new_pred_boxes = tmp.sigmoid()
+                ref_anchors.append(new_pred_boxes)
+                pred_boxes = new_pred_boxes.detach()
+
+            if self.return_intermediate:
+                intermediate.append(self.norm(query_tgt))
+                if self.return_weights:
+                    intermediate_weights.append(temp_weights)
+
+        if self.norm is not None:
+            query_tgt = self.norm(query_tgt)
+            if self.return_intermediate:
+                intermediate.pop()
+                intermediate.append(query_tgt)
+
+        return torch.stack(ref_anchors).transpose(1, 2)

@@ -1,0 +1,103 @@
+class PosDecoder(nn.Module):
+    def __init__(self, cfg, num_layers, return_intermediate=False, return_weights=False, d_model=256, query_dim=4):
+        super().__init__()
+        # keep interface
+        self.num_layers = num_layers
+        self.return_intermediate = return_intermediate
+        self.return_weights = False
+        self.query_dim = query_dim
+        self.d_model = d_model
+
+        # Simple MLP that maps from d_model -> d_model (feature update)
+        dim_feed = max(d_model, 256)
+        self.update_mlps = nn.ModuleList([
+            nn.Sequential(
+                nn.Linear(d_model, dim_feed),
+                nn.ReLU(inplace=True),
+                nn.LayerNorm(dim_feed),
+                nn.Linear(dim_feed, d_model),
+                nn.ReLU(inplace=True),
+                nn.LayerNorm(d_model),
+            ) for _ in range(num_layers)
+        ])
+
+        # bbox head: map d_model -> 4 (box coords)
+        self.bbox_heads = nn.ModuleList([
+            nn.Sequential(
+                nn.Linear(d_model, d_model),
+                nn.ReLU(inplace=True),
+                nn.LayerNorm(d_model),
+                nn.Linear(d_model, query_dim)  # final -> 4
+            ) for _ in range(num_layers)
+        ])
+
+        # keep some attribute names used elsewhere (even if unused)
+        self.query_scale = None
+        self.ref_point_head = None
+        self.bbox_embed = None
+        self.gf_mlp = None
+        self.gf_mlp2 = None
+        self.fuse_linear = None
+        self.norm = nn.LayerNorm(d_model)
+
+    def forward(
+            self,
+            query_tgt: Optional[Tensor] = None,  
+            pred_boxes: Optional[Tensor] = None,  
+            query_time=None,  
+            query_mask: Optional[Tensor] = None,  
+            encoded_feature: Optional[Tensor] = None, 
+            encoded_pos: Optional[Tensor] = None,  
+            encoded_mask: Optional[Tensor] = None,
+    ):
+        """
+        Minimal MLP-based substitute for the original transformer decoder.
+        - pred_boxes: expected shape (t, b, 4) or (t, 1, 4) (we handle broadcasting).
+        - query_tgt: expected shape (t, b, d_model) -- used as initial query features if provided,
+                     otherwise zeroed features are created.
+        Returns: stacked boxes of shape (num_layers, b, t, 4).
+        """
+        device = pred_boxes.device if pred_boxes is not None else (query_tgt.device if query_tgt is not None else torch.device('cpu'))
+
+        # ensure query_tgt: t x b x d_model
+        if query_tgt is None:
+            # create zeros with same t and b inferred from pred_boxes
+            if pred_boxes is None:
+                raise ValueError("PosDecoder forward expects pred_boxes or query_tgt.")
+            t, b = pred_boxes.shape[0], pred_boxes.shape[1]
+            query_tgt = torch.zeros(t, b, self.d_model, device=device)
+        else:
+            t, b, _ = query_tgt.shape
+
+        # normalize/expand pred_boxes to t x b x query_dim
+        if pred_boxes is None:
+            # start from zeros
+            pred_boxes = torch.zeros(t, b, self.query_dim, device=device)
+        else:
+            # if pred_boxes shape is (t,1,4) expand to (t,b,4)
+            if pred_boxes.shape[1] == 1 and b != 1:
+                pred_boxes = pred_boxes.expand(t, b, pred_boxes.shape[2]).contiguous()
+
+        layer_boxes = []
+        x = query_tgt  # t x b x d_model
+
+        for i in range(self.num_layers):
+            # apply update MLP independently per query (merge time & batch dims for MLP)
+            x_flat = x.view(t * b, -1)
+            x_up = self.update_mlps[i](x_flat)
+            x_up = x_up.view(t, b, -1)
+            # produce bbox from updated features
+            bbox_flat = self.bbox_heads[i](x_up.view(t * b, -1))
+            bbox = bbox_flat.view(t, b, self.query_dim).sigmoid()  # sigmoid to keep in [0,1]
+            layer_boxes.append(bbox)  # t x b x 4
+            # optionally feed the bbox back as additional input (concat projected back to d_model)
+            # simple residual: add a linear-projection of bbox into feature space (here just expand)
+            # keep it simple: add small perturbation from bbox
+            perturb = F.pad(bbox, (0, self.d_model - self.query_dim)) if self.d_model > self.query_dim else bbox[..., :self.d_model]
+            perturb = perturb.to(x.dtype)
+            x = x + 0.1 * perturb  # small influence of predicted box
+
+        # stack -> (num_layers, t, b, 4) then transpose to (num_layers, b, t, 4)
+        stacked = torch.stack(layer_boxes)  # L x t x b x 4
+        stacked = stacked.transpose(1, 2)   # L x b x t x 4
+        return stacked
