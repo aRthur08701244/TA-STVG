@@ -5,3 +5,4 @@ checkpoints/
 data_ta_anno/
 last_checkpoint
 *.pth
+output/hcstvg2/tensorboard/events.*
