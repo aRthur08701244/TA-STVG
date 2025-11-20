@@ -46,7 +46,7 @@ class CrossModalEncoder(nn.Module):
         _, _, H, W = vis_features.shape
         # n_frames x c x h x w => hw x n_frames x c
         vis_features = vis_features.flatten(2).permute(2, 0, 1)  # torch.Size([156, 64, 256])
-        vid = vid.flatten(2).permute(2, 0, 1)
+        # vid = vid.flatten(2).permute(2, 0, 1)
         vis_pos = vis_pos.flatten(2).permute(2, 0, 1)
         vis_mask = vis_mask.flatten(1)
 
@@ -59,12 +59,12 @@ class CrossModalEncoder(nn.Module):
         text_features = text_features.expand(text_features.size(0), frame_length, text_features.size(-1))   # [text_len, n_frames, d_model]
 
         # concat visual and text features and Pad the vis_pos with 0 for the text tokens
-        features = torch.cat([vis_features, text_features, vid], dim=0)
-        mask = torch.cat([vis_mask, text_mask, vis_mask], dim=1)
-        vis_pos = torch.cat([vis_pos, torch.zeros_like(text_features), vis_pos], dim=0)
+        features = torch.cat([vis_features, text_features], dim=0)
+        mask = torch.cat([vis_mask, text_mask], dim=1)
+        vis_pos = torch.cat([vis_pos, torch.zeros_like(text_features)], dim=0)
 
         # perfrom cross-modality interaction
-        encoded_feature, frames_cls, videos_cls = self.encoder(
+        encoded_feature, frames_cls = self.encoder(
             features, 
             src_key_padding_mask=mask,
             pos=vis_pos,
@@ -75,7 +75,7 @@ class CrossModalEncoder(nn.Module):
             "encoded_feature": encoded_feature,  #
             "encoded_mask": mask,  # batch first
             "frames_cls" : frames_cls,  # n_frame, d_model
-            "videos_cls" : videos_cls, # b , d_model
+            # "videos_cls" : videos_cls, # b , d_model
             "durations": vis_durations,
             "fea_map_size": (H, W)
         }
@@ -133,8 +133,8 @@ class SpatialTemporalEncoder(nn.Module):
             output = self.norm(output)
 
         frame_src = torch.mean(output, dim=0)
-        video_src = torch.mean(frame_src, dim=0)
-        return output, frame_src, video_src
+        # video_src = torch.mean(frame_src, dim=0)
+        return output, frame_src#, video_src
 
 
 class TransformerEncoderLayer(nn.Module):

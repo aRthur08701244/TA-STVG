@@ -62,10 +62,10 @@ class TASTVGNet(nn.Module):
         self.temp_embed = MLP(hidden_dim, hidden_dim, 2, 2, dropout=0.3)
         self.bbox_embed = MLP(hidden_dim, hidden_dim, 4, 3)
 
-        self.vid = vidswin_model("video_swin_t_p4w7", "video_swin_t_p4w7_k400_1k")
+        # self.vid = vidswin_model("video_swin_t_p4w7", "video_swin_t_p4w7_k400_1k")
         self.input_proj2 = nn.Conv2d(768, hidden_dim, kernel_size=1)
-        for param in self.vid.parameters():
-            param.requires_grad = False
+        # for param in self.vid.parameters():
+        #     param.requires_grad = False
 
         self.action_embed = MLP(hidden_dim, hidden_dim, 1, 2, dropout=0.3)
 
@@ -95,9 +95,9 @@ class TASTVGNet(nn.Module):
         vis_res_features, vis_mask, vis_durations = vis_outputs.decompose()  
         vis_features = self.input_proj(vis_res_features)  
         vis_outputs = NestedTensor(vis_features, vis_mask, vis_durations)
-        with torch.no_grad():
-            vid_features_all = self.vid(videos.tensors, len(videos.tensors))
-        vid_features = self.input_proj2(vid_features_all['3'])
+        # with torch.no_grad():
+        #     vid_features_all = self.vid(videos.tensors, len(videos.tensors))
+        # vid_features = self.input_proj2(vid_features_all['3'])
 
         # Extract Textual Feature
         info_key = str(targets[0]['item_id']) if self.cfg.DATASET.NAME == 'VidSTG' else targets[0]['vid']
@@ -106,12 +106,13 @@ class TASTVGNet(nn.Module):
         text_outputs, text_cls = self.text_encoder(texts, vis_features.device)
 
         # Multimodal Feature Fusion
-        encoded_info = self.ground_encoder(videos=vis_outputs, vis_pos=vis_pos_embed, texts=text_outputs, vid=vid_features)
+        # encoded_info = self.ground_encoder(videos=vis_outputs, vis_pos=vis_pos_embed, texts=text_outputs, vid=vid_features)
+        encoded_info = self.ground_encoder(videos=vis_outputs, vis_pos=vis_pos_embed, texts=text_outputs, vid=None)
 
-        l = vid_features.size(-1) * vid_features.size(-2)
-        f_vid_features = encoded_info['encoded_feature'][-l:].permute(1, 2, 0).reshape(vid_features.size()).detach()
-        f_vis_features = encoded_info['encoded_feature'][:l].permute(1, 2, 0).reshape(vid_features.size()).detach()
-        f_text_cls = encoded_info['encoded_feature'][l:-l].mean(1).unsqueeze(0).detach()
+        # l = vid_features.size(-1) * vid_features.size(-2)
+        # f_vid_features = encoded_info['encoded_feature'][-l:].permute(1, 2, 0).reshape(vid_features.size()).detach()
+        f_vis_features = encoded_info['encoded_feature'].permute(1, 2, 0).reshape(vis_features.size()).detach()
+        f_text_cls = encoded_info['encoded_feature'].mean(1).unsqueeze(0).detach()
         
         """
         # Text-guided Temporal Sampling
