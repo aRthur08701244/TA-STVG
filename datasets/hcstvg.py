@@ -95,9 +95,12 @@ class HCSTVGDataset(data.Dataset):
             try:
                 if frame_ids[-1] >= frames.shape[0]:
                     print("[DEBUG] frame_ids[-1] >= frames.shape[0]: ", frame_ids[-1], frames.shape[0], video_path)
+                    breakpoint()
                     frame_ids = frame_ids[frame_ids < frames.shape[0]]
                 frames = frames[frame_ids]
-            except:
+            except Exception as e:
+                print(f"[DEBUG] Exception when indexing frames: {e}")
+                breakpoint()
                 actual_frame_counts = frames.shape[0]
                 print("frame_ids wrong", video_path, frame_ids, actual_frame_counts)
                 frames = np.ones((1000, resolution, int(resolution * max_rate), 3), dtype=np.uint8)
@@ -189,26 +192,43 @@ class HCSTVGDataset(data.Dataset):
         
             start_fid = 0
             end_fid = frame_nums - 1
+            # Do we need temp_gt_begin and temp_gt_end?
+            if start_fid >= gt_file['tube_end_frame'] or end_fid <= gt_file['tube_start_frame']:
+                print(f"Warning: {video_name} has no overlap between video frames and tube frames, skipping")
+                breakpoint()
             temp_gt_begin = max(start_fid, gt_file['tube_start_frame'])
             temp_gt_end = min(gt_file['tube_end_frame'], end_fid)
 
             bbox_list = gt_file.get('target_bboxs', [])
             if not isinstance(bbox_list, list):
-                bbox_list = []
                 print(f"Warning: {video_name} bbox is not a list, skipping")
+                breakpoint()
+                bbox_list = []
 
             assert len(bbox_list) == temp_gt_end - temp_gt_begin + 1
 
             # Use the annotated tube range instead of entire video
-            frame_ids = list(range(temp_gt_begin, temp_gt_end + 1))
+            # Why? This makes actioness all 1s
+            # frame_ids = list(range(temp_gt_begin, temp_gt_end + 1))
+            frame_ids = list(range(start_fid, end_fid))
+            """
+            if temp_gt_begin != start_fid or (temp_gt_end + 1) != end_fid:
+                print(f"[DEBUG] temp_gt_begin != start_fid: {temp_gt_begin} != {start_fid} in {video_name}. (gt_file['tube_start_frame']: {gt_file['tube_start_frame']})")
+                print("or")
+                print(f"[DEBUG] temp_gt_end + 1 != end_fid: {temp_gt_end + 1} != {end_fid} in {video_name}. (gt_file['tube_end_frame']: {gt_file['tube_end_frame']})")
+                breakpoint()
+            """
             # print("frame_ids: ", frame_ids)
             # generate actioness     
             actioness = np.array([int(fid <= temp_gt_end and fid >= temp_gt_begin) for fid in frame_ids]) 
             
             # prepare the temporal heatmap
             action_idx = np.where(actioness)[0]
+            # why???
             if len(action_idx) == 0:
                 start_idx = end_idx = 0
+                print(f"len(action_idx) = 0 => action_idx: {action_idx} in {video_name}")
+                breakpoint()
             else:
                 start_idx, end_idx = action_idx[0], action_idx[-1]
             
@@ -238,23 +258,57 @@ class HCSTVGDataset(data.Dataset):
                     print(f"Warning: there is a bbox with length {len(bbox)} (4 is valid) in {video_name}, skipping")
                     continue
                 x1, y1, w, h = bbox
+                
+                if x1 < 0 or y1 < 0:
+                    print(f"Warning: {video_name} bbox with negative x1 or y1: {bbox}")
+                    # breakpoint()
+                    
+                    # print("Clamping to 0")
+                    # x1 = max(0, x1)
+                    # y1 = max(0, y1)
+                
+                # x1_tmp, y1_tmp, x2_tmp, y2_tmp = deepcopy(x1), deepcopy(y1), min(x1+w, gt_file['width']), min(y1+h, gt_file['height'])
+                x2 = x1 + w
+                if x2 > gt_file['width']:
+                    print(f"Warning: {video_name} bbox x2 out of range: {x2}, clamping to {gt_file['width']}")
+                    # breakpoint()
+                    x2 = gt_file['width']
+                y2 = y1 + h
+                if y2 > gt_file['height']:
+                    print(f"Warning: {video_name} bbox y2 out of range: {y2}, clamping to {gt_file['height']}")
+                    # breakpoint()
+                    y2 = gt_file['height']
+                bbox_array.append(np.array([x1, y1, x2, y2]))
+                assert x1 <= gt_file['width'] and x2 <= gt_file['width']
+                assert y1 <= gt_file['height'] and y2 <= gt_file['height']
 
+                """
                 # is it needed?
                 # clamp to valid range
                 x1 = max(0, min(x1, width-1))
                 y1 = max(0, min(y1, height-1))
                 x2 = max(0, min(x1 + max(1, w), width))
                 y2 = max(0, min(y1 + max(1, h), height))
+                
+                if x1 != x1_tmp or y1 != y1_tmp or x2 != x2_tmp or y2 != y2_tmp:
+                    print(f"Warning: {video_name} bbox clamped from {[x1_tmp, y1_tmp, x2_tmp, y2_tmp]} to {[x1, y1, x2, y2]}")
+                    breakpoint()
 
                 # bbox_array.append(np.array([x1,y1,min(x1+w, gt_file['width']), min(y1+h, gt_file['height'])]))
                 bbox_array.append(np.array([x1, y1, x2, y2]))
+                """
 
                 # skip boxes with zero or negative width/height
                 if x2 <= x1 or y2 <= y1:
                     print(f"Warning: {video_name} bbox with non-positive width/height: {bbox}, skipping")
+                    breakpoint()
                     continue
+                """
                 if x1 < 0 or y1 < 0 or x2 > width or y2 > height:
                     print(f"Warning: {video_name} bbox out of range: {bbox}")
+                    breakpoint()
+                    continue
+                """
                 # assert x1 <= gt_file['width'] and x1 + w <= gt_file['width']
                 # assert y1 <= gt_file['height'] and y1 + h <= gt_file['height']
             
@@ -315,6 +369,7 @@ class HCSTVGDataset(data.Dataset):
             # sanity check
             if not isinstance(anno, dict):
                 print(f"Skipping {vid}: invalid annotation type {type(anno)}")
+                breakpoint()
                 continue
             data_pairs = {}
             data_pairs['vid'] = vid
@@ -323,6 +378,11 @@ class HCSTVGDataset(data.Dataset):
                 h, w, _ = anno['img_size']
                 data_pairs['width'] = w
                 data_pairs['height'] = h
+                if 'width' in anno and 'height' in anno:
+                    if anno['width'] != w or anno['height'] != h:
+                        print(f"Warning: {vid} width/height in img_size and separate fields do not match. Using img_size values.")
+                        print(f"img_size: ({w}, {h}), separate fields: ({anno['width']}, {anno['height']})")
+                        breakpoint()
             elif 'width' in anno and 'height' in anno:
                 data_pairs['width'] = anno['width']
                 data_pairs['height'] = anno['height']
@@ -340,6 +400,9 @@ class HCSTVGDataset(data.Dataset):
             data_pairs['tube_start_time'] = anno['st_time']
             data_pairs['tube_end_time'] = anno['ed_time']
             data_pairs['id'] = pair_cnt
+            if anno['caption'] != anno['English']:
+                print(f"Warning: {vid} caption and English fields do not match. Using English field.")
+                breakpoint()
             data_pairs['sentence'] = anno['English']
             data_pairs['target_bboxs'] = bbox_list
             proc_hcstvg_anno[pair_cnt] = data_pairs

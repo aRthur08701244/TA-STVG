@@ -73,7 +73,7 @@ MODEL:
     NAME: resnet101
     POS_ENC: sine
   WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
-OUTPUT_DIR: output/hcstvg2
+OUTPUT_DIR: output/hcstvg2/
 SOLVER:
   ACTIONESS_COEF: 2
   ATTN_COEF: 1
@@ -122,4 +122,4 @@ SOLVER:
   WARMUP_METHOD: linear
   WARMUP_PROP: 0.01
   WEIGHT_DECAY: 0.0001
-TENSORBOARD_DIR: output/hcstvg2
+TENSORBOARD_DIR: output/hcstvg2/tensorboard

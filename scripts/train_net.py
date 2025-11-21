@@ -109,6 +109,7 @@ def train(cfg, local_rank, distributed, logger):
         durations = batch_dict['durations']
         targets = to_device(batch_dict["targets"], device) 
         targets[0]["durations"] = durations
+        """
         outputs = model(videos, texts, targets, iteration/max_iter)
 
         # compute loss
@@ -194,6 +195,7 @@ def train(cfg, local_rank, distributed, logger):
         if cfg.SOLVER.TO_VAL and iteration % cfg.SOLVER.VAL_PERIOD == 0:
             run_eval(cfg, model, model_ema, logger, val_data_loader, device)
             # run_test(cfg, model, model_ema, logger, distributed)
+        """
         
     total_training_time = time.time() - start_training_time
     total_time_str = str(datetime.timedelta(seconds=total_training_time))

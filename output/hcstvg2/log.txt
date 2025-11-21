@@ -3772,3 +3772,2128 @@ TENSORBOARD_DIR: output/hcstvg2/tensorboard
 2025-11-13 17:39:39,951 Video Grounding INFO: Loading checkpoint from checkpoints/TASTVG_HCSTVG2.pth
 2025-11-13 17:39:49,121 Video Grounding INFO: Start Testing
 2025-11-13 17:39:49,932 Video Grounding INFO: Start evaluation on the test split of HC-STVG dataset
+2025-11-20 18:03:37,540 Video Grounding INFO: Using 1 GPUs
+2025-11-20 18:03:37,540 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-20 18:03:37,552 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-20 18:03:37,553 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-20 18:03:37,553 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-20 18:03:57,007 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 10:01:16,654 Video Grounding INFO: Using 1 GPUs
+2025-11-21 10:01:16,655 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-21 10:01:16,675 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-21 10:01:16,676 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-21 10:01:16,676 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-21 10:01:39,867 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 13:12:37,832 Video Grounding INFO: Using 1 GPUs
+2025-11-21 13:12:37,833 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-21 13:12:37,833 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-21 13:12:37,834 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-21 13:12:37,852 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-21 13:12:54,359 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 13:15:58,332 Video Grounding INFO: Using 1 GPUs
+2025-11-21 13:15:58,332 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-21 13:15:58,333 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-21 13:15:58,341 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-21 13:15:58,341 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-21 13:16:14,819 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 13:20:58,304 Video Grounding INFO: Using 1 GPUs
+2025-11-21 13:20:58,304 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-21 13:20:58,304 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-21 13:20:58,305 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-21 13:20:58,306 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-21 13:21:14,741 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 13:24:10,963 Video Grounding INFO: Using 1 GPUs
+2025-11-21 13:24:10,963 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-21 13:24:10,984 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-21 13:24:10,985 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-21 13:24:10,985 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-21 13:24:27,455 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 13:42:18,811 Video Grounding INFO: Using 1 GPUs
+2025-11-21 13:42:18,811 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-21 13:42:18,849 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-21 13:42:18,850 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-21 13:42:18,850 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-21 13:42:35,377 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 13:43:46,942 Video Grounding INFO: Using 1 GPUs
+2025-11-21 13:43:46,942 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-21 13:43:46,942 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-21 13:43:46,943 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-21 13:43:46,965 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-21 13:44:03,717 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 13:47:59,126 Video Grounding INFO: Using 1 GPUs
+2025-11-21 13:47:59,126 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-21 13:47:59,127 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-21 13:47:59,152 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-21 13:47:59,152 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-21 13:48:15,282 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 13:57:26,850 Video Grounding INFO: Using 1 GPUs
+2025-11-21 13:57:26,851 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-21 13:57:26,858 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-21 13:57:26,859 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-21 13:57:26,860 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-21 13:57:43,030 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 14:13:17,470 Video Grounding INFO: Using 1 GPUs
+2025-11-21 14:13:17,471 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-21 14:13:17,471 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-21 14:13:17,493 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-21 14:13:17,494 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-21 14:13:33,472 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 14:16:50,261 Video Grounding INFO: Using 1 GPUs
+2025-11-21 14:16:50,261 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-21 14:16:50,261 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-21 14:16:50,268 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-21 14:16:50,269 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-21 14:17:07,131 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 14:18:47,743 Video Grounding INFO: Using 1 GPUs
+2025-11-21 14:18:47,743 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-21 14:18:47,743 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-21 14:18:47,776 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-21 14:18:47,776 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-21 14:19:03,895 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 15:07:27,630 Video Grounding INFO: Using 1 GPUs
+2025-11-21 15:07:27,630 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-21 15:07:27,643 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-21 15:07:27,644 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-21 15:07:27,645 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-21 15:07:44,398 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 15:12:09,779 Video Grounding INFO: Using 1 GPUs
+2025-11-21 15:12:09,779 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-21 15:12:09,780 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-21 15:12:09,797 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-21 15:12:09,797 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-21 15:12:26,409 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 15:21:26,540 Video Grounding INFO: Using 1 GPUs
+2025-11-21 15:21:26,541 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-21 15:21:26,566 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-21 15:21:26,567 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-21 15:21:26,568 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-21 15:21:42,688 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 15:25:27,439 Video Grounding INFO: Using 1 GPUs
+2025-11-21 15:25:27,440 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-21 15:25:27,440 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-21 15:25:27,458 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-21 15:25:27,459 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-21 15:25:44,070 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 15:37:00,869 Video Grounding INFO: Using 1 GPUs
+2025-11-21 15:37:00,869 Video Grounding INFO: Namespace(config_file='experiments/hcstvg2.yaml', local_rank=0, seed=2021, skip_test=False, use_seed=True, opts=[], distributed=False)
+2025-11-21 15:37:00,870 Video Grounding INFO: Loaded configuration file experiments/hcstvg2.yaml
+2025-11-21 15:37:00,885 Video Grounding INFO: Running with config:
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 8
+  SIZE_DIVISIBILITY: 0
+DATASET:
+  APP_NUM: 15
+  MIN_GT_FRAME: 4
+  MOT_NUM: 60
+  NAME: HC-STVG
+  NUM_CLIP_FRAMES: 32
+DATA_DIR: data/hc-stvg2
+DATA_TRUNK: None
+FROM_SCRATCH: True
+GLOVE_DIR: 
+INPUT:
+  AUG_SCALE: True
+  AUG_TRANSLATE: False
+  FLIP_PROB_TRAIN: 0.7
+  MAX_QUERY_LEN: 26
+  MAX_VIDEO_LEN: 200
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  RESOLUTION: 420
+  SAMPLE_FPS: 3.2
+  TEMP_CROP_PROB: 0.5
+  TRAIN_SAMPLE_NUM: 64
+MODEL:
+  DEVICE: cuda
+  DOWN_RATIO: 4
+  EMA: True
+  EMA_DECAY: 0.9998
+  LSTM:
+    BIDIRECTIONAL: True
+    DROPOUT: 0
+    HIDDEN_SIZE: 512
+    NAME: lstm
+  LSTM_NUM_LAYERS: 2
+  QUERY_NUM: 1
+  TASTVG:
+    CONV_LAYERS: 4
+    DEC_LAYERS: 6
+    DROPOUT: 0.1
+    ENC_LAYERS: 6
+    FFN_DIM: 2048
+    FROM_SCRATCH: True
+    HEADS: 8
+    HIDDEN: 256
+    KERNAL_SIZE: 9
+    MAX_MAP_SIZE: 128
+    POOLING_COUNTS: [15, 8, 8, 8]
+    QUERY_DIM: 4
+    TEMP_HEAD: attn
+    TEMP_PRED_LAYERS: 6
+    USE_ACTION: True
+    USE_LEARN_TIME_EMBED: False
+  TEXT_MODEL:
+    FREEZE: False
+    NAME: roberta-base
+  USE_LSTM: False
+  VISION_BACKBONE:
+    DILATION: False
+    FREEZE: False
+    NAME: resnet101
+    POS_ENC: sine
+  WEIGHT: model_zoo/pretrained_resnet101_checkpoint.pth
+OUTPUT_DIR: output/hcstvg2/
+SOLVER:
+  ACTIONESS_COEF: 2
+  ATTN_COEF: 1
+  BASE_LR: 0.0003
+  BATCH_SIZE: 1
+  BBOX_COEF: 5
+  CHECKPOINT_PERIOD: 500
+  CONF2_COEF: 1
+  CONF3_COEF: 1
+  CONF4_COEF: 1
+  CONF_COEF: 1
+  EOS_COEF: 0.3
+  GAMMA: 0.1
+  GIOU_COEF: 4
+  MAX_EPOCH: 90
+  MAX_GRAD_NORM: 0.1
+  MOMENTUM: 0.9
+  OPTIMIZER: adamw
+  POWER: 0.9
+  PRE_VAL: False
+  SCHEDULE:
+    COOLDOWN: 1
+    DROP_STEP: [50, 90]
+    FACTOR: 0.5
+    MAX_DECAY_STEP: 7
+    PATIENCE: 2
+    THRESHOLD: 0.0001
+    TYPE: multistep_with_warmup
+  SHUFFLE: True
+  SIGMA: 2.0
+  STEPS: (30000,)
+  TEMP_COEF: 10
+  TEMP_LR: 0.0002
+  TEXT_LR: 5e-05
+  TO_VAL: True
+  USE_ATTN: False
+  USE_AUX_LOSS: True
+  VAL_PERIOD: 500
+  VERB_LR: 0.0005
+  VIS_BACKBONE_LR: 5e-06
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WARMUP_PROP: 0.01
+  WEIGHT_DECAY: 0.0001
+TENSORBOARD_DIR: output/hcstvg2/tensorboard
+2025-11-21 15:37:00,886 Video Grounding INFO: Saving config into: output/hcstvg2/config.yml
+2025-11-21 15:37:17,100 Video Grounding INFO: Loading checkpoint from model_zoo/pretrained_resnet101_checkpoint.pth
+2025-11-21 15:39:42,565 Video Grounding INFO: Start training
