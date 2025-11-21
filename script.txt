@@ -10,6 +10,11 @@ pip install -r requirements.txt
 # pip install opencv-python==4.10.0.82
 # torchdata==0.9.0
 
+mamba create --name stvg python=3.10
+mamba activate stvg
+pip install torch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 --index-url https://download.pytorch.org/whl/cu121
+pip install -r requirements_new.txt
+
 python3 -c "
 from transformers import RobertaModel, RobertaTokenizer
 model = RobertaModel.from_pretrained('roberta-base')

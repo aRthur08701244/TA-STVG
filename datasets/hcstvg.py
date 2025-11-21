@@ -200,7 +200,7 @@ class HCSTVGDataset(data.Dataset):
             assert len(bbox_list) == temp_gt_end - temp_gt_begin + 1
 
             # Use the annotated tube range instead of entire video
-            frame_ids = list(range(temp_gt_begin, temp_gt_end + 1))
+            frame_ids = list(range(start_fid, end_fid))
             # print("frame_ids: ", frame_ids)
             # generate actioness     
             actioness = np.array([int(fid <= temp_gt_end and fid >= temp_gt_begin) for fid in frame_ids]) 
@@ -241,10 +241,12 @@ class HCSTVGDataset(data.Dataset):
 
                 # is it needed?
                 # clamp to valid range
-                x1 = max(0, min(x1, width-1))
-                y1 = max(0, min(y1, height-1))
-                x2 = max(0, min(x1 + max(1, w), width))
-                y2 = max(0, min(y1 + max(1, h), height))
+                # x1 = max(0, min(x1, width-1))
+                # y1 = max(0, min(y1, height-1))
+                # x2 = max(0, min(x1 + max(1, w), width))
+                x2 = min(x1+w, gt_file['width'])
+                # y2 = max(0, min(y1 + max(1, h), height))
+                y2 = min(y1+h, gt_file['height'])
 
                 # bbox_array.append(np.array([x1,y1,min(x1+w, gt_file['width']), min(y1+h, gt_file['height'])]))
                 bbox_array.append(np.array([x1, y1, x2, y2]))
